@@ -1,7 +1,7 @@
 ﻿namespace RSATests
 {
     [TestClass]
-    internal class RSATests
+    public class RSATests
     {
         [TestMethod]
         public void Test()
