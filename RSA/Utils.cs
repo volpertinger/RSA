@@ -87,7 +87,7 @@
         }
 
         /// <summary>
-        /// Finding prime numbers using the sieve of eratosthenes
+        /// Finding prime numbers (that less than input number) using the sieve of eratosthenes
         /// </summary>
         public static IEnumerable<ulong> SieveEratosthenes(ulong length)
         {
@@ -110,6 +110,9 @@
             return numbers;
         }
 
+        /// <summary>
+        /// Calculates the Euler`s function from number
+        /// </summary>
         public static int Euler(ulong number)
         {
             if (number == 1)
@@ -117,8 +120,58 @@
             return GetReducedSystem(number).Count();
         }
 
+        /// <summary>
+        /// Number factorization
+        /// </summary>
+        public static List<NumberFactor> Factorization(ulong number)
+        {
+            var primes = SieveEratosthenes(number + 1);
+            var result = new List<NumberFactor>();
+            foreach (var prime in primes)
+            {
+                if (number == 1)
+                    break;
+                var currentFactor = new NumberFactor(prime);
+                while (number % prime == 0)
+                {
+                    number /= prime;
+                    ++currentFactor.Degree;
+                }
+                if (currentFactor.Degree > 0)
+                    result.Add(currentFactor);
+            }
+            return result;
+        }
+
         //-------------------------------------------------------------------------------------------------------------
         // private
         //-------------------------------------------------------------------------------------------------------------
+    }
+
+    public class NumberFactor
+    {
+        public ulong Prime { get; set; }
+        public ulong Degree { get; set; }
+
+        public NumberFactor(ulong prime)
+        {
+            Prime = prime;
+            Degree = 0;
+        }
+
+        public NumberFactor(ulong prime, ulong degree)
+        {
+            Prime = prime;
+            Degree = degree;
+        }
+
+        public static bool operator ==(NumberFactor lhs, NumberFactor rhs)
+        {
+            return (lhs.Prime == rhs.Prime) && (lhs.Degree == rhs.Degree);
+        }
+        public static bool operator !=(NumberFactor lhs, NumberFactor rhs)
+        {
+            return !(lhs == rhs);
+        }
     }
 }
