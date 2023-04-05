@@ -25,10 +25,10 @@
         /// <summary>
         /// Extended euclidean algorithm
         /// </summary>
-        /// <param name="lhs">first number</param>
-        /// <param name="rhs">second number</param>
-        /// <param name="lhsCoef">first bezout ratio</param>
-        /// <param name="rhsCoef">second bezout ratio</param>
+        /// <param name="lhs">First number</param>
+        /// <param name="rhs">Second number</param>
+        /// <param name="lhsCoef">First bezout ratio</param>
+        /// <param name="rhsCoef">Second bezout ratio</param>
         /// <returns>GCD of lhs and rhs</returns>
         public static ulong ExtendedGCD(ulong lhs, ulong rhs, out long lhsCoef, out long rhsCoef)
         {
@@ -49,6 +49,23 @@
             lhsCoef = upL;
             rhsCoef = upR;
             return rhs;
+        }
+
+        /// <summary>
+        /// Get reverse element to number modulo deductions
+        /// </summary>
+        /// <param name="number">The number to which we are looking for the inverse</param>
+        /// <param name="mod">Deduction module</param>
+        /// <returns>Reverse to number. If the number and the modulus are not coprime, then returns 0</returns>
+        public static ulong GetReverse(ulong number, ulong mod)
+        {
+            long leftCoef = 0, rightCoef = 0;
+            var gcd = ExtendedGCD(number, mod, out leftCoef, out rightCoef);
+            if (gcd != 1)
+                return 0;
+            if (leftCoef < 0)
+                return mod - (ulong)Math.Abs(leftCoef);
+            return (ulong)leftCoef;
         }
     }
 }
