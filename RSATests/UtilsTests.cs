@@ -118,7 +118,21 @@ namespace RSATests
         {
             List<List<ulong>> expectedSystems = new() { new() { 1, 2, 4, 7, 8, 11, 13,14},
                 new () { 1, 5, 11, 13, 17, 19, 23, 25, 29, 31, 37, 41 },
-            new (){
+            };
+            List<List<ulong>> actualSyatems = new() { RSA.Utils.GetReducedSystem(15).ToList(),
+                RSA.Utils.GetReducedSystem(42).ToList() };
+            for (int i = 0; i < expectedSystems.Count() && i < actualSyatems.Count(); ++i)
+            {
+                listTest(expectedSystems[i], actualSyatems[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSieveEratosthenes()
+        {
+            List<List<ulong>> expectedPrimes = new() { new(),new() {2, 3, 5, 7},
+                new () {2, 3, 5, 7, 11, 13, 17, 19, 23},
+                new (){
                       2,
                       3,
                       5,
@@ -1349,24 +1363,27 @@ namespace RSATests
                       9967,
                       9973
                     } };
-            List<List<ulong>> actualSyatems = new() { RSA.Utils.GetReducedSystem(15).ToList(),
-                RSA.Utils.GetReducedSystem(42).ToList(), RSA.Utils.GetReducedSystem(10000).ToList() };
-            for (int i = 0; i < expectedSystems.Count() && i < actualSyatems.Count(); ++i)
+            List<List<ulong>> actualPrimes = new() {RSA.Utils.SieveEratosthenes(0).ToList(),
+                RSA.Utils.SieveEratosthenes(10).ToList(),
+                RSA.Utils.SieveEratosthenes(29).ToList(),
+                RSA.Utils.SieveEratosthenes(10000).ToList() };
+            for (int i = 0; i < expectedPrimes.Count() && i < actualPrimes.Count(); ++i)
             {
-                listTest<ulong>(expectedSystems[i], actualSyatems[i]);
+                listTest(actualPrimes[i], expectedPrimes[i]);
             }
         }
 
         [TestMethod]
-        public void TestSieveEratosthenes()
+        public void TestEuler()
         {
-            List<List<ulong>> expectedPrimes = new() { new() {2, 3, 5, 7},
-                new () {2, 3, 5, 7, 11, 13, 17, 19, 23} };
-            List<List<ulong>> actualPrimes = new() { RSA.Utils.SieveEratosthenes(10).ToList(),
-                 RSA.Utils.SieveEratosthenes(29).ToList() };
-            for (int i = 0; i < expectedPrimes.Count() && i < actualPrimes.Count(); ++i)
+            List<int> actual = new() { 0, 1, 16, 1044, 9552, 325632, 26326320, 1992648390 };
+            List<int> expected = new() {
+            RSA.Utils.Euler(0), RSA.Utils.Euler(1), RSA.Utils.Euler(34), RSA.Utils.Euler(1121),
+            RSA.Utils.Euler(16737), RSA.Utils.Euler(987654), RSA.Utils.Euler(36198745), RSA.Utils.Euler(1992648391)
+            };
+            for (int i = 0; i < actual.Count() && i < expected.Count(); ++i)
             {
-                listTest<ulong>(expectedPrimes[i], actualPrimes[i]);
+                Assert.AreEqual(actual[i], expected[i]);
             }
         }
 
