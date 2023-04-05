@@ -119,11 +119,11 @@ namespace RSATests
             List<List<ulong>> expectedSystems = new() { new() { 1, 2, 4, 7, 8, 11, 13,14},
                 new () { 1, 5, 11, 13, 17, 19, 23, 25, 29, 31, 37, 41 },
             };
-            List<List<ulong>> actualSyatems = new() { RSA.Utils.GetReducedSystem(15).ToList(),
+            List<List<ulong>> actualSystems = new() { RSA.Utils.GetReducedSystem(15).ToList(),
                 RSA.Utils.GetReducedSystem(42).ToList() };
-            for (int i = 0; i < expectedSystems.Count() && i < actualSyatems.Count(); ++i)
+            for (int i = 0; i < expectedSystems.Count() && i < actualSystems.Count(); ++i)
             {
-                listTest(expectedSystems[i], actualSyatems[i]);
+                listTest(expectedSystems[i], actualSystems[i]);
             }
         }
 
@@ -1387,6 +1387,31 @@ namespace RSATests
             }
         }
 
+        [TestMethod]
+        public void TestFactorization()
+        {
+            List<List<RSA.NumberFactor>> actual = new()
+            {
+                new() {},
+                new() { new(2,1) },
+                new() { new(2,1), new(3,1) },
+                new() { new(2,3), new(5,3) },
+                new() { new(23,1), new(2819,1) }
+            };
+            List<List<RSA.NumberFactor>> expected = new()
+            {
+                RSA.Utils.Factorization(1),
+                RSA.Utils.Factorization(2),
+                RSA.Utils.Factorization(6),
+                RSA.Utils.Factorization(1000),
+                RSA.Utils.Factorization(64837)
+            };
+            for (int i = 0; i < actual.Count && i < expected.Count; ++i)
+            {
+                listTestFactor(actual[i], expected[i]);
+            }
+        }
+
         //-------------------------------------------------------------------------------------------------------------
         // utils
         //-------------------------------------------------------------------------------------------------------------
@@ -1396,6 +1421,13 @@ namespace RSATests
             Assert.AreEqual(lhs.Count(), rhs.Count());
             for (int i = 0; i < lhs.Count() && i < rhs.Count(); ++i)
                 Assert.AreEqual(lhs[i], rhs[i]);
+        }
+
+        private void listTestFactor(List<RSA.NumberFactor> lhs, List<RSA.NumberFactor> rhs)
+        {
+            Assert.AreEqual(lhs.Count(), rhs.Count());
+            for (int i = 0; i < lhs.Count() && i < rhs.Count(); ++i)
+                Assert.IsTrue(lhs[i] == rhs[i]);
         }
     }
 }
