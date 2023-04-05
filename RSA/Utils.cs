@@ -2,6 +2,10 @@
 {
     public static class Utils
     {
+        //-------------------------------------------------------------------------------------------------------------
+        // public
+        //-------------------------------------------------------------------------------------------------------------
+
         /// <summary>
         /// Euclidean algorithm
         /// </summary>
@@ -67,5 +71,47 @@
                 return mod - (ulong)Math.Abs(leftCoef);
             return (ulong)leftCoef;
         }
+
+        /// <summary>
+        /// Obtaining a reduced system of residues modulo mod
+        /// </summary>
+        public static IEnumerable<ulong> GetReducedSystem(ulong mod)
+        {
+            List<ulong> result = new();
+            for (ulong i = 0; i < mod; ++i)
+            {
+                if (GCD(i, mod) == 1)
+                    result.Add(i);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Finding prime numbers using the sieve of eratosthenes
+        /// </summary>
+        public static IEnumerable<ulong> SieveEratosthenes(ulong length)
+        {
+            var numbers = new List<ulong>();
+            // initial list filling
+            for (var i = 2u; i < length; i++)
+            {
+                numbers.Add(i);
+            }
+
+            for (var i = 0; i < numbers.Count; i++)
+            {
+                for (var j = 2u; j < length; j++)
+                {
+                    // remove multiples from a list
+                    numbers.Remove(numbers[i] * j);
+                }
+            }
+
+            return numbers;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
+        // private
+        //-------------------------------------------------------------------------------------------------------------
     }
 }
