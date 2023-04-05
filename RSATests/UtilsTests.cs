@@ -90,5 +90,27 @@ namespace RSATests
             Assert.AreEqual(11L, leftCoeff);
             Assert.AreEqual(-326052251621812L, rightCoeff);
         }
+
+        [TestMethod]
+        public void TestReverse()
+        {
+            // same
+            Assert.AreEqual(0ul, RSA.Utils.GetReverse(0, 0));
+            Assert.AreEqual(1ul, RSA.Utils.GetReverse(1, 1));
+            for (ulong i = 2; i < 100; ++i)
+            {
+                Assert.AreEqual(0ul, RSA.Utils.GetReverse(i, i));
+            }
+
+            // main tests
+            Assert.AreEqual(0ul, RSA.Utils.GetReverse(1287247836921, 0));
+            Assert.AreEqual(0ul, RSA.Utils.GetReverse(0, 1287247836921));
+            Assert.AreEqual(9ul, RSA.Utils.GetReverse(3, 26));
+            Assert.AreEqual(8933ul, RSA.Utils.GetReverse(3, 26798));
+            Assert.AreEqual(101748590926ul, RSA.Utils.GetReverse(524723782, 1287247836921));
+            
+            Assert.AreEqual(21481267ul, RSA.Utils.GetReverse(69182549281122748, 24828289));
+            Assert.AreEqual(0ul, RSA.Utils.GetReverse(8357100938261829039, 7357100938261017));
+        }
     }
 }
