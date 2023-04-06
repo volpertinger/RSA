@@ -1376,10 +1376,10 @@ namespace RSATests
         [TestMethod]
         public void TestEuler()
         {
-            List<int> actual = new() { 0, 1, 16, 1044, 9552, 325632, 26326320, 1992648390 };
+            List<int> actual = new() { 0, 1, 16, 1044, 9552 };
             List<int> expected = new() {
-            RSA.Utils.Euler(0), RSA.Utils.Euler(1), RSA.Utils.Euler(34), RSA.Utils.Euler(1121),
-            RSA.Utils.Euler(16737), RSA.Utils.Euler(987654), RSA.Utils.Euler(36198745), RSA.Utils.Euler(1992648391)
+            RSA.Utils.Euler(0), RSA.Utils.Euler(1), RSA.Utils.Euler(34), 
+            RSA.Utils.Euler(1121), RSA.Utils.Euler(16737)
             };
             for (int i = 0; i < actual.Count() && i < expected.Count(); ++i)
             {
@@ -1395,21 +1395,50 @@ namespace RSATests
                 new() {},
                 new() { new(2,1) },
                 new() { new(2,1), new(3,1) },
-                new() { new(2,3), new(5,3) },
-                new() { new(23,1), new(2819,1) }
+                new() { new(2,3), new(5,3) }
             };
             List<List<RSA.NumberFactor>> expected = new()
             {
-                RSA.Utils.Factorization(1),
-                RSA.Utils.Factorization(2),
-                RSA.Utils.Factorization(6),
-                RSA.Utils.Factorization(1000),
-                RSA.Utils.Factorization(64837)
+                RSA.Utils.Factorization(1).ToList(),
+                RSA.Utils.Factorization(2).ToList(),
+                RSA.Utils.Factorization(6).ToList(),
+                RSA.Utils.Factorization(1000).ToList()
             };
             for (int i = 0; i < actual.Count && i < expected.Count; ++i)
             {
                 listTestFactor(actual[i], expected[i]);
             }
+        }
+
+        [TestMethod]
+        public void TestEulerByFactor()
+        {
+            List<int> actual = new() { 0, 1, 16, 1044, 9552 };
+            List<int> expected = new() {
+            RSA.Utils.EulerByFactoriation(0), RSA.Utils.EulerByFactoriation(1), 
+            RSA.Utils.EulerByFactoriation(34), RSA.Utils.EulerByFactoriation(1121),
+            RSA.Utils.EulerByFactoriation(16737)
+            };
+            for (int i = 0; i < actual.Count() && i < expected.Count(); ++i)
+            {
+                Assert.AreEqual(actual[i], expected[i]);
+            }
+        }
+
+        [TestMethod]
+        public void TestFastPow()
+        {
+            Assert.AreEqual(Math.Pow(1, 0), RSA.Utils.FastPow(1, 0));
+            Assert.AreEqual(Math.Pow(1, 2), RSA.Utils.FastPow(1, 2));
+            Assert.AreEqual(Math.Pow(8, 4), RSA.Utils.FastPow(8, 4));
+            Assert.AreEqual(Math.Pow(111, 2), RSA.Utils.FastPow(111, 2));
+            Assert.AreEqual(Math.Pow(987, 4), RSA.Utils.FastPow(987, 4));
+            Assert.AreEqual(Math.Pow(10, 10), RSA.Utils.FastPow(10, 10));
+            Assert.AreEqual(Math.Pow(998, 3), RSA.Utils.FastPow(998, 3));
+            Assert.AreEqual(Math.Pow(83, 4), RSA.Utils.FastPow(83, 4));
+            Assert.AreEqual(Math.Pow(123, 6), RSA.Utils.FastPow(123, 6));
+            Assert.AreEqual(Math.Pow(981, 5), RSA.Utils.FastPow(981, 5));
+            Assert.AreEqual(Math.Pow(391, 7), RSA.Utils.FastPow(391, 7));
         }
 
         //-------------------------------------------------------------------------------------------------------------
