@@ -111,19 +111,9 @@
         }
 
         /// <summary>
-        /// Calculates the Euler`s function from number
-        /// </summary>
-        public static int Euler(ulong number)
-        {
-            if (number == 1)
-                return 1;
-            return GetReducedSystem(number).Count();
-        }
-
-        /// <summary>
         /// Number factorization
         /// </summary>
-        public static List<NumberFactor> Factorization(ulong number)
+        public static IEnumerable<NumberFactor> Factorization(ulong number)
         {
             var primes = SieveEratosthenes(number + 1);
             var result = new List<NumberFactor>();
@@ -139,6 +129,56 @@
                 }
                 if (currentFactor.Degree > 0)
                     result.Add(currentFactor);
+                if (primes.Contains(number))
+                {
+                    result.Add(new NumberFactor(number, 1));
+                    break;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates the Euler`s function from number
+        /// </summary>
+        public static int Euler(ulong number)
+        {
+            if (number == 1)
+                return 1;
+            return GetReducedSystem(number).Count();
+        }
+
+        /// <summary>
+        /// Calculates the Euler`s function from number by factorization
+        /// </summary>
+        public static int EulerByFactoriation(ulong number)
+        {
+            if (number == 0)
+                return 0;
+
+            var factorization = Factorization(number);
+            int result = 1;
+            foreach (var factor in factorization)
+            {
+                result *= (int)Math.Pow(factor.Prime, factor.Degree) - (int)Math.Pow(factor.Prime, factor.Degree - 1);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Binary exponentiation
+        /// </summary>
+        public static ulong FastPow(ulong number, ulong degree)
+        {
+            ulong result = 1;
+            while (degree != 0)
+            {
+                if ((degree & 1) != 0)
+                {
+                    result *= number;
+                }
+                number *= number;
+                degree >>= 1;
             }
             return result;
         }
