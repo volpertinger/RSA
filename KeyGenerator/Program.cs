@@ -71,6 +71,26 @@ class Program
 
         logger.Info("Settings loaded successfully. Starting generation");
 
+        // main generation
+        var firstPrime = 0ul;
+        var secondPrime = 0ul;
+        Generator.GeneratePrimesTuple(out firstPrime, out secondPrime, settings.minPrimeValue,
+            settings.maxPrimeValue);
+        logger.Info("Primes generated successfully!");
+
+        var openKeyNumber = firstPrime * secondPrime;
+        logger.Info("Open key number calculated successfully!");
+
+        var euler = RSA.Utils.EulerByFactoriation(new List<RSA.NumberFactor> {
+                new(firstPrime, 1), new(secondPrime, 1)});
+        logger.Info("Euler function calculated successfully!");
+
+        var openKeyRelPrime = Generator.GenerateRelativelyPrime((ulong)euler, settings.minPrimeValue);
+        logger.Info("Open key relative prime generated successfully!");
+
+        var secretKey = RSA.Utils.GetReverse(openKeyRelPrime, (ulong)euler);
+        logger.Info("Generation finished successfully!");
+
         if (File.Exists(settings.outputPath))
         {
             logger.Error(String.Format("File with path {0} Already exists!", settings.outputPath));
@@ -79,19 +99,9 @@ class Program
 
         using (var fsi = new StreamWriter(settings.outputPath))
         {
-            var firstPrime = 0ul;
-            var secondPrime = 0ul;
-            Generator.GeneratePrimesTuple(out firstPrime, out secondPrime, settings.minPrimeValue,
-                settings.maxPrimeValue);
-            var openKeyNumber = firstPrime * secondPrime;
-            var euler = RSA.Utils.EulerByFactoriation(new List<RSA.NumberFactor> {
-                new(firstPrime, 1), new(secondPrime, 1)});
-            var openKeyRelPrime = Generator.GenerateRelativelyPrime((ulong)euler, settings.minPrimeValue);
-            var secretKey = RSA.Utils.GetReverse(openKeyRelPrime, (ulong)euler);
-
-            fsi.WriteLine(String.Format("First prime: {0}\nSecond prime: {1}\n" +
-                "OpenKey [Number]: {2}\nEuler: {3}\nOpenKey [RelativePrime]: {4}\nSecret key: {5}",
-                firstPrime, secondPrime, openKeyNumber, euler, openKeyRelPrime, secretKey));
+            fsi.WriteLine(String.Format("Open key [Number]: {0}\nOpen key [Relative prime]: {1}\n" +
+                "Secret key [Reverse to relative prime]: {2}",
+                openKeyNumber, openKeyRelPrime, secretKey));
             fsi.Close();
         }
 

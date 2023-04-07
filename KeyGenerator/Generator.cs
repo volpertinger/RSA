@@ -17,8 +17,12 @@
             primes = primes.Where(item => (item >= minBorder) && (item <= maxBorder));
 
             Random random = new Random((int)DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-            firstPrime = primes.ElementAt(random.Next(primes.Count()));
-            while ((secondPrime = primes.ElementAt(random.Next(primes.Count()))) == firstPrime) ;
+            var index = random.Next(primes.Count());
+            firstPrime = primes.ElementAt(index);
+
+            var ignoringElement = primes.ElementAt(index);
+            primes = primes.Where(item => item != ignoringElement);
+            secondPrime = primes.ElementAt(random.Next(primes.Count()));
         }
 
         public static ulong GenerateRelativelyPrime(ulong number,
