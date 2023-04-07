@@ -1,5 +1,6 @@
 ﻿{
   "minPrimeValue": 3000,
   "maxPrimeValue": 10000,
-  "seed" :  1234567890
+  "seed": 1234567890,
+  "outputPath": "***\\Keys.txt"
 }
