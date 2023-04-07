@@ -4,13 +4,13 @@
     public class GeneratorTests
     {
         [TestMethod]
-        public void TestGenerator()
+        public void TestPrimeGenerator()
         {
             ulong maxValue = 1000;
             ulong minValue = 400;
             var primes = RSA.Utils.SieveEratosthenes(maxValue);
-            var firstPrime = 0ul;
-            var secondPrime = 0ul;
+            ulong firstPrime = 0;
+            ulong secondPrime = 0;
 
             for (ulong i = 0; i < maxValue; ++i)
             {
@@ -20,6 +20,19 @@
                 Assert.AreNotEqual(firstPrime, secondPrime);
                 Assert.IsTrue((firstPrime >= minValue) && (firstPrime <= maxValue));
                 Assert.IsTrue((secondPrime >= minValue) && (secondPrime <= maxValue));
+            }
+        }
+
+        [TestMethod]
+        public void TestRelativelyPrimeGenerator()
+        {
+            ulong maxValue = 1000;
+            ulong minValue = 400;
+
+            for (ulong i = 0; i < maxValue; ++i)
+            {
+                var relativePrime = KeyGenerator.Generator.GenerateRelativelyPrime(maxValue ,minValue);
+                Assert.AreEqual(1ul, RSA.Utils.GCD(relativePrime, maxValue));
             }
         }
     }
