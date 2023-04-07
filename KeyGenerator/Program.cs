@@ -69,6 +69,12 @@ class Program
             return JsonFormatError;
         }
 
+        if (File.Exists(settings.OutputPath))
+        {
+            logger.Error(String.Format("File with path {0} Already exists!", settings.OutputPath));
+            return OutputFileExistsError;
+        }
+
         logger.Info("Settings loaded successfully. Starting generation");
 
         // main generation
@@ -85,17 +91,11 @@ class Program
                 new(firstPrime, 1), new(secondPrime, 1)});
         logger.Info("Euler function calculated successfully!");
 
-        var openKeyRelPrime = Generator.GenerateRelativelyPrime((ulong)euler, settings.MinPrimeValue);
+        var openKeyRelPrime = Generator.GenerateRelativelyPrime(euler, settings.MinPrimeValue);
         logger.Info("Open key relative prime generated successfully!");
 
-        var secretKey = RSA.Utils.GetReverse(openKeyRelPrime, (ulong)euler);
+        var secretKey = RSA.Utils.GetReverse(openKeyRelPrime, euler);
         logger.Info("Generation finished successfully!");
-
-        if (File.Exists(settings.OutputPath))
-        {
-            logger.Error(String.Format("File with path {0} Already exists!", settings.OutputPath));
-            return OutputFileExistsError;
-        }
 
         using (var fsi = new StreamWriter(settings.OutputPath))
         {
