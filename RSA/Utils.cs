@@ -151,12 +151,12 @@
         /// <summary>
         /// Calculates the Euler`s function from number factorization
         /// </summary>
-        public static int EulerByFactoriation(IEnumerable<NumberFactor> factorization)
+        public static ulong EulerByFactoriation(IEnumerable<NumberFactor> factorization)
         {
-            int result = 1;
+            ulong result = 1;
             foreach (var factor in factorization)
             {
-                result *= (int)Math.Pow(factor.Prime, factor.Degree) - (int)Math.Pow(factor.Prime, factor.Degree - 1);
+                result *= FastPow(factor.Prime, factor.Degree) - FastPow(factor.Prime, factor.Degree - 1);
             }
             return result;
         }
