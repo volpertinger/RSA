@@ -74,8 +74,8 @@ class Program
         // main generation
         var firstPrime = 0ul;
         var secondPrime = 0ul;
-        Generator.GeneratePrimesTuple(out firstPrime, out secondPrime, settings.minPrimeValue,
-            settings.maxPrimeValue);
+        Generator.GeneratePrimesTuple(out firstPrime, out secondPrime, settings.MinPrimeValue,
+            settings.MaxPrimeValue);
         logger.Info("Primes generated successfully!");
 
         var openKeyNumber = firstPrime * secondPrime;
@@ -85,19 +85,19 @@ class Program
                 new(firstPrime, 1), new(secondPrime, 1)});
         logger.Info("Euler function calculated successfully!");
 
-        var openKeyRelPrime = Generator.GenerateRelativelyPrime((ulong)euler, settings.minPrimeValue);
+        var openKeyRelPrime = Generator.GenerateRelativelyPrime((ulong)euler, settings.MinPrimeValue);
         logger.Info("Open key relative prime generated successfully!");
 
         var secretKey = RSA.Utils.GetReverse(openKeyRelPrime, (ulong)euler);
         logger.Info("Generation finished successfully!");
 
-        if (File.Exists(settings.outputPath))
+        if (File.Exists(settings.OutputPath))
         {
-            logger.Error(String.Format("File with path {0} Already exists!", settings.outputPath));
+            logger.Error(String.Format("File with path {0} Already exists!", settings.OutputPath));
             return OutputFileExistsError;
         }
 
-        using (var fsi = new StreamWriter(settings.outputPath))
+        using (var fsi = new StreamWriter(settings.OutputPath))
         {
             fsi.WriteLine(String.Format("Open key [Number]: {0}\nOpen key [Relative prime]: {1}\n" +
                 "Secret key [Reverse to relative prime]: {2}",

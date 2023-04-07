@@ -1,5 +1,5 @@
 ﻿{
-  "minPrimeValue": 3000,
-  "maxPrimeValue": 10000,
-  "outputPath": "***\\Keys.txt"
+  "MinPrimeValue": 3000,
+  "MaxPrimeValue": 10000,
+  "OutputPath": "***\\Keys.txt"
 }
