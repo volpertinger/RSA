@@ -1373,9 +1373,6 @@ namespace RSATests
             {
                 listTest(actualPrimes[i], expectedPrimes[i]);
             }
-
-            // time metric
-            RSA.Utils.SieveEratosthenes(65536);
         }
 
         [TestMethod]
