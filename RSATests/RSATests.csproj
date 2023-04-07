@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KeyGenerator\KeyGenerator.csproj" />
     <ProjectReference Include="..\RSA\RSA.csproj" />
   </ItemGroup>
 

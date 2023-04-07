@@ -149,14 +149,10 @@
         }
 
         /// <summary>
-        /// Calculates the Euler`s function from number by factorization
+        /// Calculates the Euler`s function from number factorization
         /// </summary>
-        public static int EulerByFactoriation(ulong number)
+        public static int EulerByFactoriation(IEnumerable<NumberFactor> factorization)
         {
-            if (number == 0)
-                return 0;
-
-            var factorization = Factorization(number);
             int result = 1;
             foreach (var factor in factorization)
             {

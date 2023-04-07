@@ -1,3 +1,5 @@
+using RSA;
+
 namespace RSATests
 {
     [TestClass]
@@ -1413,11 +1415,13 @@ namespace RSATests
         [TestMethod]
         public void TestEulerByFactor()
         {
-            List<int> actual = new() { 0, 1, 16, 1044, 9552 };
+            List<int> actual = new() { 1, 16, 1044, 9552, 507343320 };
             List<int> expected = new() {
-            RSA.Utils.EulerByFactoriation(0), RSA.Utils.EulerByFactoriation(1), 
-            RSA.Utils.EulerByFactoriation(34), RSA.Utils.EulerByFactoriation(1121),
-            RSA.Utils.EulerByFactoriation(16737)
+            RSA.Utils.EulerByFactoriation(new List<NumberFactor>{}), // 1
+            RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(2,1), new(17,1)}), // 34 
+            RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(19,1), new(59,1)}), // 1121
+            RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(3,1), new(7,1), new(797,1)}), // 16737
+            RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(3,1), new(11,3), new(209647, 1)}) // 837120471
             };
             for (int i = 0; i < actual.Count() && i < expected.Count(); ++i)
             {
