@@ -10,7 +10,6 @@
             int seed = 0
             )
         {
-
             if (minBorder >= maxBorder)
                 throw new ArgumentException(String.Format("Invalid borders value." +
                     "minBorder = {0} must be lower than maxBorder = {1}",
