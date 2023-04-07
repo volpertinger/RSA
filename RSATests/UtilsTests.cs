@@ -1373,6 +1373,9 @@ namespace RSATests
             {
                 listTest(actualPrimes[i], expectedPrimes[i]);
             }
+
+            // time metric
+            RSA.Utils.SieveEratosthenes(65536);
         }
 
         [TestMethod]
@@ -1415,8 +1418,8 @@ namespace RSATests
         [TestMethod]
         public void TestEulerByFactor()
         {
-            List<int> actual = new() { 1, 16, 1044, 9552, 507343320 };
-            List<int> expected = new() {
+            List<ulong> actual = new() { 1, 16, 1044, 9552, 507343320 };
+            List<ulong> expected = new() {
             RSA.Utils.EulerByFactoriation(new List<NumberFactor>{}), // 1
             RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(2,1), new(17,1)}), // 34 
             RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(19,1), new(59,1)}), // 1121
