@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections;
+using System.Numerics;
 
 namespace RSA
 {
@@ -93,25 +94,29 @@ namespace RSA
         /// <summary>
         /// Finding prime numbers (that less than input number) using the sieve of eratosthenes
         /// </summary>
-        public static IEnumerable<BigInteger> SieveEratosthenes(BigInteger length)
+        public static IEnumerable<BigInteger> SieveEratosthenes(BigInteger upperLimit)
         {
-            var numbers = new List<BigInteger>();
-            // initial list filling
-            for (var i = 2u; i < length; i++)
-            {
-                numbers.Add(i);
-            }
+            if (upperLimit > int.MaxValue)
+                throw new ArgumentException(String.Format("upper limit is BigInteger only for " +
+                    "interface interaction. Max vaule is {0}, but given {1}",
+                    int.MaxValue, upperLimit));
 
-            for (var i = 0; i < numbers.Count; i++)
-            {
-                for (var j = 2u; j < length; j++)
-                {
-                    // remove multiples from a list
-                    numbers.Remove(numbers[i] * j);
-                }
-            }
+            BitArray composite = new BitArray((int)upperLimit);
 
-            return numbers;
+            int sqrt = (int)Math.Sqrt((int)upperLimit);
+            for (int p = 2; p <= sqrt; ++p)
+            {
+                if (composite[p]) continue;
+
+                yield return p;
+
+                for (int i = p * p; i < upperLimit; i += p)
+                    composite[i] = true;
+            }
+            for (int p = sqrt + 1; p < upperLimit; ++p)
+            {
+                if (!composite[p]) yield return p;
+            }
         }
 
         /// <summary>
@@ -168,7 +173,7 @@ namespace RSA
         /// <summary>
         /// Binary exponentiation
         /// </summary>
-        public static BigInteger FastPow(BigInteger number, BigInteger degree)
+        public static BigInteger FastPow(BigInteger number, uint degree)
         {
             BigInteger result = 1;
             while (degree != 0)
@@ -178,8 +183,7 @@ namespace RSA
                     result *= number;
                 }
                 number *= number;
-                // >> for BigInteger
-                degree /= 2;
+                degree >>= 1;
             }
             return result;
         }
@@ -192,7 +196,7 @@ namespace RSA
     public class NumberFactor
     {
         public BigInteger Prime { get; set; }
-        public BigInteger Degree { get; set; }
+        public uint Degree { get; set; }
 
         public NumberFactor(BigInteger prime)
         {
@@ -200,7 +204,7 @@ namespace RSA
             Degree = 0;
         }
 
-        public NumberFactor(BigInteger prime, BigInteger degree)
+        public NumberFactor(BigInteger prime, uint degree)
         {
             Prime = prime;
             Degree = degree;
