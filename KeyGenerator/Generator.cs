@@ -1,4 +1,6 @@
-﻿namespace KeyGenerator
+﻿using System.Numerics;
+
+namespace KeyGenerator
 {
     public static class Generator
     {
@@ -6,10 +8,10 @@
         // public
         //-------------------------------------------------------------------------------------------------------------
         public static void GeneratePrimesTuple(
-            out ulong firstPrime,
-            out ulong secondPrime,
-            ulong minBorder = 0,
-            ulong maxBorder = ulong.MaxValue
+            out BigInteger firstPrime,
+            out BigInteger secondPrime,
+            BigInteger minBorder,
+            BigInteger maxBorder
             )
         {
             ValidateBorders(minBorder, maxBorder);
@@ -25,8 +27,8 @@
             secondPrime = primes.ElementAt(random.Next(primes.Count()));
         }
 
-        public static ulong GenerateRelativelyPrime(ulong number,
-            ulong minBorder = 0)
+        public static ulong GenerateRelativelyPrime(BigInteger number,
+            BigInteger minBorder)
         {
             var maxBorder = number;
             ValidateBorders(minBorder, maxBorder);
@@ -41,7 +43,7 @@
         // private
         //-------------------------------------------------------------------------------------------------------------
 
-        private static void ValidateBorders(ulong minBorder, ulong maxBorder)
+        private static void ValidateBorders(BigInteger minBorder, BigInteger maxBorder)
         {
             if (minBorder >= maxBorder)
                 throw new ArgumentException(String.Format("Invalid borders value." +

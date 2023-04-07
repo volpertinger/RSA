@@ -1,4 +1,6 @@
 ﻿#pragma warning disable CS8618
+using System.Numerics;
+
 namespace RSA
 {
     public class Settings
@@ -21,9 +23,9 @@ namespace RSA
 
     public class Key
     {
-        public ulong? OpenNumber { get; set; }
-        public ulong? OpenRelativePrime { get; set; }
-        public ulong? SecretKey { get; set; }
+        public BigInteger? OpenNumber { get; set; }
+        public BigInteger? OpenRelativePrime { get; set; }
+        public BigInteger? SecretKey { get; set; }
     }
 }
 #pragma warning restore CS8618

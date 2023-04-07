@@ -2,6 +2,7 @@
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
 
@@ -78,8 +79,8 @@ class Program
         logger.Info("Settings loaded successfully. Starting generation");
 
         // main generation
-        var firstPrime = 0ul;
-        var secondPrime = 0ul;
+        var firstPrime = new BigInteger(0);
+        var secondPrime = new BigInteger(0);
         Generator.GeneratePrimesTuple(out firstPrime, out secondPrime, settings.MinPrimeValue,
             settings.MaxPrimeValue);
         logger.Info("Primes generated successfully!");

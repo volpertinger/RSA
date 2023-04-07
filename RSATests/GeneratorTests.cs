@@ -1,4 +1,6 @@
-﻿namespace RSATests
+﻿using System.Numerics;
+
+namespace RSATests
 {
     [TestClass]
     public class GeneratorTests
@@ -6,11 +8,11 @@
         [TestMethod]
         public void TestPrimeGenerator()
         {
-            ulong maxValue = 1000;
-            ulong minValue = 400;
+            BigInteger maxValue = 100;
+            BigInteger minValue = 40;
             var primes = RSA.Utils.SieveEratosthenes(maxValue);
-            ulong firstPrime = 0;
-            ulong secondPrime = 0;
+            BigInteger firstPrime = 0;
+            BigInteger secondPrime = 0;
 
             for (ulong i = 0; i < maxValue; ++i)
             {

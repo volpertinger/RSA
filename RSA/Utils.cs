@@ -1,4 +1,6 @@
-﻿namespace RSA
+﻿using System.Numerics;
+
+namespace RSA
 {
     public static class Utils
     {
@@ -10,7 +12,7 @@
         /// Euclidean algorithm
         /// </summary>
         /// <returns>GCD of lhs and rhs</returns>
-        public static ulong GCD(ulong lhs, ulong rhs)
+        public static BigInteger GCD(BigInteger lhs, BigInteger rhs)
         {
             if (lhs == 0)
                 return rhs;
@@ -23,7 +25,9 @@
                 else
                     rhs %= lhs;
             }
-            return Math.Max(lhs, rhs);
+            if (lhs > rhs)
+                return lhs;
+            return rhs;
         }
 
         /// <summary>
@@ -34,15 +38,15 @@
         /// <param name="lhsCoef">First bezout ratio</param>
         /// <param name="rhsCoef">Second bezout ratio</param>
         /// <returns>GCD of lhs and rhs</returns>
-        public static ulong ExtendedGCD(ulong lhs, ulong rhs, out long lhsCoef, out long rhsCoef)
+        public static BigInteger ExtendedGCD(BigInteger lhs, BigInteger rhs, out BigInteger lhsCoef, out BigInteger rhsCoef)
         {
-            long upL = 0, upR = 1, downL = 1, downR = 0;
+            BigInteger upL = 0, upR = 1, downL = 1, downR = 0;
             while (lhs != 0)
             {
-                ulong quotient = rhs / lhs;
-                ulong remainder = rhs % lhs;
-                long newDownL = upL - downL * (long)quotient;
-                long newDownR = upR - downR * (long)quotient;
+                BigInteger quotient = rhs / lhs;
+                BigInteger remainder = rhs % lhs;
+                BigInteger newDownL = upL - downL * quotient;
+                BigInteger newDownR = upR - downR * quotient;
                 rhs = lhs;
                 lhs = remainder;
                 upL = downL;
@@ -61,24 +65,24 @@
         /// <param name="number">The number to which we are looking for the inverse</param>
         /// <param name="mod">Deduction module</param>
         /// <returns>Reverse to number. If the number and the modulus are not coprime, then returns 0</returns>
-        public static ulong GetReverse(ulong number, ulong mod)
+        public static BigInteger GetReverse(BigInteger number, BigInteger mod)
         {
-            long leftCoef = 0, rightCoef = 0;
+            BigInteger leftCoef = 0, rightCoef = 0;
             var gcd = ExtendedGCD(number, mod, out leftCoef, out rightCoef);
             if (gcd != 1)
                 return 0;
             if (leftCoef < 0)
-                return mod - (ulong)Math.Abs(leftCoef);
-            return (ulong)leftCoef;
+                return mod + leftCoef;
+            return leftCoef;
         }
 
         /// <summary>
         /// Obtaining a reduced system of residues modulo mod
         /// </summary>
-        public static IEnumerable<ulong> GetReducedSystem(ulong mod)
+        public static IEnumerable<BigInteger> GetReducedSystem(BigInteger mod)
         {
-            List<ulong> result = new();
-            for (ulong i = 0; i < mod; ++i)
+            List<BigInteger> result = new();
+            for (BigInteger i = 0; i < mod; ++i)
             {
                 if (GCD(i, mod) == 1)
                     result.Add(i);
@@ -89,9 +93,9 @@
         /// <summary>
         /// Finding prime numbers (that less than input number) using the sieve of eratosthenes
         /// </summary>
-        public static IEnumerable<ulong> SieveEratosthenes(ulong length)
+        public static IEnumerable<BigInteger> SieveEratosthenes(BigInteger length)
         {
-            var numbers = new List<ulong>();
+            var numbers = new List<BigInteger>();
             // initial list filling
             for (var i = 2u; i < length; i++)
             {
@@ -113,7 +117,7 @@
         /// <summary>
         /// Number factorization
         /// </summary>
-        public static IEnumerable<NumberFactor> Factorization(ulong number)
+        public static IEnumerable<NumberFactor> Factorization(BigInteger number)
         {
             var primes = SieveEratosthenes(number + 1);
             var result = new List<NumberFactor>();
@@ -141,7 +145,7 @@
         /// <summary>
         /// Calculates the Euler`s function from number
         /// </summary>
-        public static int Euler(ulong number)
+        public static BigInteger Euler(BigInteger number)
         {
             if (number == 1)
                 return 1;
@@ -151,9 +155,9 @@
         /// <summary>
         /// Calculates the Euler`s function from number factorization
         /// </summary>
-        public static ulong EulerByFactoriation(IEnumerable<NumberFactor> factorization)
+        public static BigInteger EulerByFactoriation(IEnumerable<NumberFactor> factorization)
         {
-            ulong result = 1;
+            BigInteger result = 1;
             foreach (var factor in factorization)
             {
                 result *= FastPow(factor.Prime, factor.Degree) - FastPow(factor.Prime, factor.Degree - 1);
@@ -164,9 +168,9 @@
         /// <summary>
         /// Binary exponentiation
         /// </summary>
-        public static ulong FastPow(ulong number, ulong degree)
+        public static BigInteger FastPow(BigInteger number, BigInteger degree)
         {
-            ulong result = 1;
+            BigInteger result = 1;
             while (degree != 0)
             {
                 if ((degree & 1) != 0)
@@ -174,7 +178,8 @@
                     result *= number;
                 }
                 number *= number;
-                degree >>= 1;
+                // >> for BigInteger
+                degree /= 2;
             }
             return result;
         }
@@ -186,16 +191,16 @@
 
     public class NumberFactor
     {
-        public ulong Prime { get; set; }
-        public ulong Degree { get; set; }
+        public BigInteger Prime { get; set; }
+        public BigInteger Degree { get; set; }
 
-        public NumberFactor(ulong prime)
+        public NumberFactor(BigInteger prime)
         {
             Prime = prime;
             Degree = 0;
         }
 
-        public NumberFactor(ulong prime, ulong degree)
+        public NumberFactor(BigInteger prime, BigInteger degree)
         {
             Prime = prime;
             Degree = degree;

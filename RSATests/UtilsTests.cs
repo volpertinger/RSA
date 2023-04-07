@@ -1,4 +1,5 @@
 using RSA;
+using System.Numerics;
 
 namespace RSATests
 {
@@ -9,11 +10,11 @@ namespace RSATests
         public void TestGCD()
         {
             // zeros
-            Assert.AreEqual(0ul, RSA.Utils.GCD(0, 0));
-            Assert.AreEqual(1ul, RSA.Utils.GCD(0, 1));
-            Assert.AreEqual(1ul, RSA.Utils.GCD(1, 0));
-            Assert.AreEqual(ulong.MaxValue, RSA.Utils.GCD(ulong.MaxValue, 0));
-            Assert.AreEqual(ulong.MaxValue / 2, RSA.Utils.GCD(ulong.MaxValue / 2, 0));
+            Assert.AreEqual(new BigInteger(0), RSA.Utils.GCD(0, 0));
+            Assert.AreEqual(new BigInteger(1), RSA.Utils.GCD(0, 1));
+            Assert.AreEqual(new BigInteger(1), RSA.Utils.GCD(1, 0));
+            Assert.AreEqual(new BigInteger(ulong.MaxValue), RSA.Utils.GCD(ulong.MaxValue, 0));
+            Assert.AreEqual(new BigInteger(ulong.MaxValue / 2), RSA.Utils.GCD(ulong.MaxValue / 2, 0));
 
             // same
             ulong maxIter = 100;
@@ -21,20 +22,20 @@ namespace RSATests
                 Assert.AreEqual(i, RSA.Utils.GCD(i, i));
 
             // main
-            Assert.AreEqual(4ul, RSA.Utils.GCD(4, 60));
-            Assert.AreEqual(20ul, RSA.Utils.GCD(40, 60));
-            Assert.AreEqual(3ul, RSA.Utils.GCD(468732, 2121));
-            Assert.AreEqual(1ul, RSA.Utils.GCD(3641684623648, 1009999));
-            Assert.AreEqual(1ul, RSA.Utils.GCD(ulong.MaxValue, 1));
-            Assert.AreEqual(9ul, RSA.Utils.GCD(987654321234, 234567));
-            Assert.AreEqual(2ul, RSA.Utils.GCD(74936254782, 1526428164820298));
-            Assert.AreEqual(99ul, RSA.Utils.GCD(112233445566778899, 998877665544332211));
+            Assert.AreEqual(new BigInteger(4), RSA.Utils.GCD(4, 60));
+            Assert.AreEqual(new BigInteger(20), RSA.Utils.GCD(40, 60));
+            Assert.AreEqual(new BigInteger(3), RSA.Utils.GCD(468732, 2121));
+            Assert.AreEqual(new BigInteger(1), RSA.Utils.GCD(3641684623648, 1009999));
+            Assert.AreEqual(new BigInteger(1), RSA.Utils.GCD(ulong.MaxValue, 1));
+            Assert.AreEqual(new BigInteger(9), RSA.Utils.GCD(987654321234, 234567));
+            Assert.AreEqual(new BigInteger(2), RSA.Utils.GCD(74936254782, 1526428164820298));
+            Assert.AreEqual(new BigInteger(99), RSA.Utils.GCD(112233445566778899, 998877665544332211));
         }
 
         [TestMethod]
         public void TestExtendedGCD()
         {
-            long leftCoeff = 0, rightCoeff = 0;
+            BigInteger leftCoeff = 0, rightCoeff = 0;
 
             // zeros
 
@@ -118,10 +119,10 @@ namespace RSATests
         [TestMethod]
         public void TestGetReduced()
         {
-            List<List<ulong>> expectedSystems = new() { new() { 1, 2, 4, 7, 8, 11, 13,14},
+            List<List<BigInteger>> expectedSystems = new() { new() { 1, 2, 4, 7, 8, 11, 13,14},
                 new () { 1, 5, 11, 13, 17, 19, 23, 25, 29, 31, 37, 41 },
             };
-            List<List<ulong>> actualSystems = new() { RSA.Utils.GetReducedSystem(15).ToList(),
+            List<List<BigInteger>> actualSystems = new() { RSA.Utils.GetReducedSystem(15).ToList(),
                 RSA.Utils.GetReducedSystem(42).ToList() };
             for (int i = 0; i < expectedSystems.Count() && i < actualSystems.Count(); ++i)
             {
@@ -132,7 +133,7 @@ namespace RSATests
         [TestMethod]
         public void TestSieveEratosthenes()
         {
-            List<List<ulong>> expectedPrimes = new() { new(),new() {2, 3, 5, 7},
+            List<List<BigInteger>> expectedPrimes = new() { new(),new() {2, 3, 5, 7},
                 new () {2, 3, 5, 7, 11, 13, 17, 19, 23},
                 new (){
                       2,
@@ -1365,7 +1366,7 @@ namespace RSATests
                       9967,
                       9973
                     } };
-            List<List<ulong>> actualPrimes = new() {RSA.Utils.SieveEratosthenes(0).ToList(),
+            List<List<BigInteger>> actualPrimes = new() {RSA.Utils.SieveEratosthenes(0).ToList(),
                 RSA.Utils.SieveEratosthenes(10).ToList(),
                 RSA.Utils.SieveEratosthenes(29).ToList(),
                 RSA.Utils.SieveEratosthenes(10000).ToList() };
@@ -1378,8 +1379,8 @@ namespace RSATests
         [TestMethod]
         public void TestEuler()
         {
-            List<int> actual = new() { 0, 1, 16, 1044, 9552 };
-            List<int> expected = new() {
+            List<BigInteger> actual = new() { 0, 1, 16, 1044, 9552 };
+            List<BigInteger> expected = new() {
             RSA.Utils.Euler(0), RSA.Utils.Euler(1), RSA.Utils.Euler(34), 
             RSA.Utils.Euler(1121), RSA.Utils.Euler(16737)
             };
@@ -1415,8 +1416,8 @@ namespace RSATests
         [TestMethod]
         public void TestEulerByFactor()
         {
-            List<ulong> actual = new() { 1, 16, 1044, 9552, 507343320 };
-            List<ulong> expected = new() {
+            List<BigInteger> actual = new() { 1, 16, 1044, 9552, 507343320 };
+            List<BigInteger> expected = new() {
             RSA.Utils.EulerByFactoriation(new List<NumberFactor>{}), // 1
             RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(2,1), new(17,1)}), // 34 
             RSA.Utils.EulerByFactoriation(new List<NumberFactor>{new(19,1), new(59,1)}), // 1121
@@ -1432,17 +1433,17 @@ namespace RSATests
         [TestMethod]
         public void TestFastPow()
         {
-            Assert.AreEqual(Math.Pow(1, 0), RSA.Utils.FastPow(1, 0));
-            Assert.AreEqual(Math.Pow(1, 2), RSA.Utils.FastPow(1, 2));
-            Assert.AreEqual(Math.Pow(8, 4), RSA.Utils.FastPow(8, 4));
-            Assert.AreEqual(Math.Pow(111, 2), RSA.Utils.FastPow(111, 2));
-            Assert.AreEqual(Math.Pow(987, 4), RSA.Utils.FastPow(987, 4));
-            Assert.AreEqual(Math.Pow(10, 10), RSA.Utils.FastPow(10, 10));
-            Assert.AreEqual(Math.Pow(998, 3), RSA.Utils.FastPow(998, 3));
-            Assert.AreEqual(Math.Pow(83, 4), RSA.Utils.FastPow(83, 4));
-            Assert.AreEqual(Math.Pow(123, 6), RSA.Utils.FastPow(123, 6));
-            Assert.AreEqual(Math.Pow(981, 5), RSA.Utils.FastPow(981, 5));
-            Assert.AreEqual(Math.Pow(391, 7), RSA.Utils.FastPow(391, 7));
+            Assert.AreEqual(BigInteger.Pow(1, 0), RSA.Utils.FastPow(1, 0));
+            Assert.AreEqual(BigInteger.Pow(1, 2), RSA.Utils.FastPow(1, 2));
+            Assert.AreEqual(BigInteger.Pow(8, 4), RSA.Utils.FastPow(8, 4));
+            Assert.AreEqual(BigInteger.Pow(111, 2), RSA.Utils.FastPow(111, 2));
+            Assert.AreEqual(BigInteger.Pow(987, 4), RSA.Utils.FastPow(987, 4));
+            Assert.AreEqual(BigInteger.Pow(10, 10), RSA.Utils.FastPow(10, 10));
+            Assert.AreEqual(BigInteger.Pow(998, 3), RSA.Utils.FastPow(998, 3));
+            Assert.AreEqual(BigInteger.Pow(83, 4), RSA.Utils.FastPow(83, 4));
+            Assert.AreEqual(BigInteger.Pow(123, 6), RSA.Utils.FastPow(123, 6));
+            Assert.AreEqual(BigInteger.Pow(981, 5), RSA.Utils.FastPow(981, 5));
+            Assert.AreEqual(BigInteger.Pow(391, 7), RSA.Utils.FastPow(391, 7));
         }
 
         //-------------------------------------------------------------------------------------------------------------
