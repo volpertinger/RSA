@@ -1,10 +1,10 @@
 ﻿{
-	"Key": {
-		"ModNumber": ***,
-		"OpenKey": ***,
-		"SecretKey": ***
+	"SKey": {
+		"ModNumber": "***",
+		"OpenKey": "***",
+		"SecretKey": "***"
 	},
-	"MaxByteBlocks":  ***,
+	"MaxByteBlocks":  "***",
 	"Operations": [
 		{
 			"PathInput": "***\\Examples\\Plain\\Text.txt",
