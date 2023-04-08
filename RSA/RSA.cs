@@ -7,8 +7,8 @@ namespace RSA
         public Key Key { get; private init; }
         public bool IsCanEncrypt { get; private init; }
         public bool IsCanDecrypt { get; private init; }
-        public int EncryptBlockLength { get; private init; }
-        public int DecryptBlockLength { get; private init; }
+        public int PlainBlockLength { get; private init; }
+        public int EncryptedBlockLength { get; private init; }
 
         // ------------------------------------------------------------------------------------------------------------
         // public
@@ -24,35 +24,35 @@ namespace RSA
             if (!IsCanEncrypt && !IsCanDecrypt)
                 throw new ArgumentException("key must contains at least public key or secret key!");
             Key = key;
-            EncryptBlockLength = CalculateByteBlockLength() - 1;
-            DecryptBlockLength = CalculateByteBlockLength();
+            PlainBlockLength = CalculatePlainByteBlockLength();
+            EncryptedBlockLength = CalculateEncryptedByteBlockLength();
         }
 
         public bool Encrypt(FileStream ifs, FileStream ofs)
         {
-            var buffer = new byte[EncryptBlockLength];
+            var buffer = new byte[PlainBlockLength];
             int length;
-            while ((length = ifs.Read(buffer, 0, EncryptBlockLength)) > 0)
+            while ((length = ifs.Read(buffer, 0, PlainBlockLength)) > 0)
             {
                 var block = ByteArrayToBlock(buffer);
                 var encrypt = EncryptBlock(block);
-                var byteArray = BlockToByteArray(encrypt, DecryptBlockLength);
-                ofs.Write(byteArray, 0, DecryptBlockLength);
-                buffer = new byte[EncryptBlockLength];
+                var byteArray = BlockToByteArray(encrypt, EncryptedBlockLength);
+                ofs.Write(byteArray, 0, EncryptedBlockLength);
+                buffer = new byte[PlainBlockLength];
             }
             return true;
         }
 
         public bool Decrypt(FileStream ifs, FileStream ofs)
         {
-            var buffer = new byte[DecryptBlockLength];
+            var buffer = new byte[EncryptedBlockLength];
             int length;
-            while ((length = ifs.Read(buffer, 0, DecryptBlockLength)) > 0)
+            while ((length = ifs.Read(buffer, 0, EncryptedBlockLength)) > 0)
             {
                 var block = ByteArrayToBlock(buffer);
                 var decrypt = DecryptBlock(block);
-                var byteArray = BlockToByteArray(decrypt, EncryptBlockLength);
-                ofs.Write(byteArray, 0, EncryptBlockLength);
+                var byteArray = BlockToByteArray(decrypt, PlainBlockLength);
+                ofs.Write(byteArray, 0, PlainBlockLength);
             }
             return true;
         }
@@ -77,7 +77,23 @@ namespace RSA
         // private
         // ------------------------------------------------------------------------------------------------------------
 
-        private int CalculateByteBlockLength()
+        private int CalculatePlainByteBlockLength()
+        {
+            int result = 0;
+            var counter = Key.ModNumber;
+            while (counter > 0)
+            {
+                counter >>= Constants.ByteLength;
+                if (counter > 0)
+                    ++result;
+            }
+            if (result < Constants.MinBlockLength)
+                throw new ArgumentException(String.Format("Modulo number {0} too low for " +
+                    "minimum block encryption = {1} bytes.", Key.ModNumber, Constants.MinBlockLength));
+            return result;
+        }
+
+        private int CalculateEncryptedByteBlockLength()
         {
             int result = 0;
             var counter = Key.ModNumber;
@@ -88,7 +104,7 @@ namespace RSA
             }
             if (result < Constants.MinBlockLength)
                 throw new ArgumentException(String.Format("Modulo number {0} too low for " +
-                    "minimum block encryption = {1} bytes.", Key.ModNumber, Constants.MinBlockLength));
+                    "minimum block decryption = {1} bytes.", Key.ModNumber, Constants.MinBlockLength));
             return result;
         }
 
