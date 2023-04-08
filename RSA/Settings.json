@@ -4,7 +4,6 @@
 		"OpenKey": "***",
 		"SecretKey": "***"
 	},
-	"MaxByteBlocks":  "***",
 	"Operations": [
 		{
 			"PathInput": "***\\Examples\\Plain\\Text.txt",
