@@ -1381,7 +1381,7 @@ namespace RSATests
         {
             List<BigInteger> actual = new() { 0, 1, 16, 1044, 9552 };
             List<BigInteger> expected = new() {
-            RSA.Utils.Euler(0), RSA.Utils.Euler(1), RSA.Utils.Euler(34), 
+            RSA.Utils.Euler(0), RSA.Utils.Euler(1), RSA.Utils.Euler(34),
             RSA.Utils.Euler(1121), RSA.Utils.Euler(16737)
             };
             for (int i = 0; i < actual.Count() && i < expected.Count(); ++i)
@@ -1433,6 +1433,7 @@ namespace RSATests
         [TestMethod]
         public void TestFastPow()
         {
+            // no limit on mod 
             Assert.AreEqual(BigInteger.Pow(1, 0), RSA.Utils.FastPow(1, 0));
             Assert.AreEqual(BigInteger.Pow(1, 2), RSA.Utils.FastPow(1, 2));
             Assert.AreEqual(BigInteger.Pow(8, 4), RSA.Utils.FastPow(8, 4));
@@ -1444,6 +1445,12 @@ namespace RSATests
             Assert.AreEqual(BigInteger.Pow(123, 6), RSA.Utils.FastPow(123, 6));
             Assert.AreEqual(BigInteger.Pow(981, 5), RSA.Utils.FastPow(981, 5));
             Assert.AreEqual(BigInteger.Pow(391, 7), RSA.Utils.FastPow(391, 7));
+
+            // with limit on mod
+            Assert.AreEqual(0, RSA.Utils.FastPow(2, 32, 2));
+            Assert.AreEqual(1, RSA.Utils.FastPow(3, 32, 2));
+            Assert.AreEqual(2, RSA.Utils.FastPow(1000, 30, 34));
+            Assert.AreEqual(2377748722, RSA.Utils.FastPow(8612189837, 6968567183, 2644925087));
         }
 
         //-------------------------------------------------------------------------------------------------------------
