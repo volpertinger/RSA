@@ -72,7 +72,7 @@ class Program
             secretKey = BigInteger.Parse(settings.SKey.SecretKey!);
         var key = new Key(BigInteger.Parse(settings.SKey.ModNumber), openKey, secretKey);
 
-        var rsa = new RSA.RSA(key, settings.MaxByteBlocks);
+        var rsa = new RSA.RSA(key);
 
         logger.Info("RSA processing started");
 

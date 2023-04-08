@@ -13,7 +13,7 @@ namespace RSA
         // public
         // ------------------------------------------------------------------------------------------------------------
 
-        public RSA(Key key, int maxBlockLength = Constants.MaxBlockLength)
+        public RSA(Key key)
         {
             IsCanEncrypt = key.OpenKey.HasValue;
             IsCanDecrypt = key.SecretKey.HasValue;
@@ -23,7 +23,7 @@ namespace RSA
             if (!IsCanEncrypt && !IsCanDecrypt)
                 throw new ArgumentException("key must contains at least public key or secret key!");
             Key = key;
-            ByteBlockLength = CalculateByteBlockLength(maxBlockLength);
+            ByteBlockLength = CalculateByteBlockLength();
         }
 
         public bool Encrypt(FileStream ifs, FileStream ofs)
@@ -75,21 +75,18 @@ namespace RSA
         // private
         // ------------------------------------------------------------------------------------------------------------
 
-        private int CalculateByteBlockLength(int maxBlockLength)
+        private int CalculateByteBlockLength()
         {
             int result = 0;
             var counter = Key.ModNumber;
             while (counter > 0)
             {
                 counter >>= Constants.ByteLength;
-                if (counter > 0)
-                    ++result;
+                ++result;
             }
             if (result < Constants.MinBlockLength)
                 throw new ArgumentException(String.Format("Modulo number {0} too low for " +
                     "minimum block encryption = {1} bytes.", Key.ModNumber, Constants.MinBlockLength));
-            if (result > maxBlockLength)
-                return maxBlockLength;
             return result;
         }
 

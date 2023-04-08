@@ -6,7 +6,6 @@ namespace RSA
     public class Settings
     {
         public SKey SKey { get; set; }
-        public int MaxByteBlocks { get; set; }
         public AtomicOperation[] Operations { get; set; }
     }
     public class AtomicOperation
