@@ -171,12 +171,30 @@ namespace RSA
         }
 
         /// <summary>
+        /// Binary exponentiation modulo mod
+        /// </summary>
+        public static BigInteger FastPow(BigInteger number, BigInteger degree, BigInteger mod)
+        {
+            BigInteger result = 1;
+            while (degree > 0)
+            {
+                if ((degree & 1) != 0)
+                {
+                    result = (result * number) % mod;
+                }
+                number = (number * number) % mod;
+                degree >>= 1;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Binary exponentiation
         /// </summary>
         public static BigInteger FastPow(BigInteger number, BigInteger degree)
         {
             BigInteger result = 1;
-            while (degree != 0)
+            while (degree > 0)
             {
                 if ((degree & 1) != 0)
                 {
