@@ -111,7 +111,7 @@ class Program
                 fsi.Close();
             }
         }
-        logger.Info("DES processing finished ");
+        logger.Info("RSA processing finished ");
         return Success;
     }
 }
