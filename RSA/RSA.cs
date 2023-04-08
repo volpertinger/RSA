@@ -7,7 +7,8 @@ namespace RSA
         public Key Key { get; private init; }
         public bool IsCanEncrypt { get; private init; }
         public bool IsCanDecrypt { get; private init; }
-        public int ByteBlockLength { get; private init; }
+        public int EncryptBlockLength { get; private init; }
+        public int DecryptBlockLength { get; private init; }
 
         // ------------------------------------------------------------------------------------------------------------
         // public
@@ -23,34 +24,35 @@ namespace RSA
             if (!IsCanEncrypt && !IsCanDecrypt)
                 throw new ArgumentException("key must contains at least public key or secret key!");
             Key = key;
-            ByteBlockLength = CalculateByteBlockLength();
+            EncryptBlockLength = CalculateByteBlockLength() - 1;
+            DecryptBlockLength = CalculateByteBlockLength();
         }
 
         public bool Encrypt(FileStream ifs, FileStream ofs)
         {
-            var buffer = new byte[ByteBlockLength];
+            var buffer = new byte[EncryptBlockLength];
             int length;
-            while ((length = ifs.Read(buffer, 0, ByteBlockLength)) > 0)
+            while ((length = ifs.Read(buffer, 0, EncryptBlockLength)) > 0)
             {
                 var block = ByteArrayToBlock(buffer);
                 var encrypt = EncryptBlock(block);
-                var byteArray = BlockToByteArray(encrypt, ByteBlockLength);
-                ofs.Write(byteArray, 0, ByteBlockLength);
-                buffer = new byte[ByteBlockLength];
+                var byteArray = BlockToByteArray(encrypt, DecryptBlockLength);
+                ofs.Write(byteArray, 0, DecryptBlockLength);
+                buffer = new byte[EncryptBlockLength];
             }
             return true;
         }
 
         public bool Decrypt(FileStream ifs, FileStream ofs)
         {
-            var buffer = new byte[ByteBlockLength];
+            var buffer = new byte[DecryptBlockLength];
             int length;
-            while ((length = ifs.Read(buffer, 0, ByteBlockLength)) > 0)
+            while ((length = ifs.Read(buffer, 0, DecryptBlockLength)) > 0)
             {
                 var block = ByteArrayToBlock(buffer);
                 var decrypt = DecryptBlock(block);
-                var byteArray = BlockToByteArray(decrypt, length);
-                ofs.Write(byteArray, 0, length);
+                var byteArray = BlockToByteArray(decrypt, EncryptBlockLength);
+                ofs.Write(byteArray, 0, EncryptBlockLength);
             }
             return true;
         }
@@ -90,9 +92,9 @@ namespace RSA
             return result;
         }
 
-        private static ulong ByteArrayToBlock(byte[] bytes)
+        private static BigInteger ByteArrayToBlock(byte[] bytes)
         {
-            ulong result = 0;
+            BigInteger result = 0;
             for (int i = bytes.Length - 1; i >= 0; --i)
             {
                 result <<= Constants.ByteLength;
