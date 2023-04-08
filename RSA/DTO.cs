@@ -23,8 +23,8 @@ namespace RSA
 
     public class Key
     {
-        public BigInteger? OpenNumber { get; set; }
-        public BigInteger? OpenRelativePrime { get; set; }
+        public BigInteger ModNumber { get; set; }
+        public BigInteger? OpenKey { get; set; }
         public BigInteger? SecretKey { get; set; }
     }
 }

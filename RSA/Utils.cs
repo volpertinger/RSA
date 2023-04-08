@@ -173,7 +173,7 @@ namespace RSA
         /// <summary>
         /// Binary exponentiation
         /// </summary>
-        public static BigInteger FastPow(BigInteger number, uint degree)
+        public static BigInteger FastPow(BigInteger number, BigInteger degree)
         {
             BigInteger result = 1;
             while (degree != 0)
