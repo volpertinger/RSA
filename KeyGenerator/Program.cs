@@ -100,7 +100,7 @@ class Program
 
         using (var fsi = new StreamWriter(settings.OutputPath))
         {
-            fsi.WriteLine(String.Format("Open key [Number]: {0}\nOpen key [Relative prime]: {1}\n" +
+            fsi.WriteLine(String.Format("Modulo number: {0}\nOpen key [Relative prime]: {1}\n" +
                 "Secret key [Reverse to relative prime]: {2}",
                 openKeyNumber, openKeyRelPrime, secretKey));
             fsi.Close();
