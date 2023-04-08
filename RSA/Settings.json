@@ -1,8 +1,8 @@
 ﻿{
 	"Key": {
-		"OpenNumber": ***,
-		"OpenRelativePrime": ***,
-		"SecretKey" : ***
+		"ModNumber": ***,
+		"OpenKey": ***,
+		"SecretKey": ***
 	},
 	"Operations": [
 		{
