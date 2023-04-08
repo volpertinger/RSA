@@ -3,7 +3,6 @@ using NLog.Config;
 using NLog.Targets;
 using RSA;
 using System.Numerics;
-using System.Reflection;
 using System.Text.Json;
 
 class Program
@@ -44,9 +43,6 @@ class Program
 
         Console.WriteLine(logo);
         Settings? settings = null;
-        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "", @"Settings.json");
-        string jsonnString = File.ReadAllText(path);
-        settings = JsonSerializer.Deserialize<Settings>(jsonnString);
         try
         {
             string jsonString = File.ReadAllText(path);
