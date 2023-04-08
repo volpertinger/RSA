@@ -6,6 +6,7 @@ namespace RSA
     public class Settings
     {
         public Key Key { get; set; }
+        public uint MaxByteBlocks { get; set; }
         public AtomicOperation[] Operations { get; set; }
     }
     public class AtomicOperation
@@ -26,6 +27,13 @@ namespace RSA
         public BigInteger ModNumber { get; set; }
         public BigInteger? OpenKey { get; set; }
         public BigInteger? SecretKey { get; set; }
+
+        public Key(BigInteger modNumber, BigInteger? openKey, BigInteger? secretKey)
+        {
+            ModNumber = modNumber;
+            OpenKey = openKey;
+            SecretKey = secretKey;
+        }
     }
 }
 #pragma warning restore CS8618
