@@ -7,13 +7,13 @@ namespace RSA
         public Key Key { get; private init; }
         public bool IsCanEncrypt { get; private init; }
         public bool IsCanDecrypt { get; private init; }
-        public uint ByteBlockLength { get; private init; }
+        public int ByteBlockLength { get; private init; }
 
         // ------------------------------------------------------------------------------------------------------------
         // public
         // ------------------------------------------------------------------------------------------------------------
 
-        public RSA(Key key, uint maxBlockLength = Constants.MaxBlockLength)
+        public RSA(Key key, int maxBlockLength = Constants.MaxBlockLength)
         {
             IsCanEncrypt = key.OpenKey.HasValue;
             IsCanDecrypt = key.SecretKey.HasValue;
@@ -24,6 +24,35 @@ namespace RSA
                 throw new ArgumentException("key must contains at least public key or secret key!");
             Key = key;
             ByteBlockLength = CalculateByteBlockLength(maxBlockLength);
+        }
+
+        public bool Encrypt(FileStream ifs, FileStream ofs)
+        {
+            var buffer = new byte[ByteBlockLength];
+            int length;
+            while ((length = ifs.Read(buffer, 0, ByteBlockLength)) > 0)
+            {
+                var block = ByteArrayToBlock(buffer);
+                var encrypt = EncryptBlock(block);
+                var byteArray = BlockToByteArray(encrypt, ByteBlockLength);
+                ofs.Write(byteArray, 0, ByteBlockLength);
+                buffer = new byte[ByteBlockLength];
+            }
+            return true;
+        }
+
+        public bool Decrypt(FileStream ifs, FileStream ofs)
+        {
+            var buffer = new byte[ByteBlockLength];
+            int length;
+            while ((length = ifs.Read(buffer, 0, ByteBlockLength)) > 0)
+            {
+                var block = ByteArrayToBlock(buffer);
+                var decrypt = DecryptBlock(block);
+                var byteArray = BlockToByteArray(decrypt, length);
+                ofs.Write(byteArray, 0, length);
+            }
+            return true;
         }
 
         public BigInteger EncryptBlock(BigInteger block)
@@ -46,9 +75,9 @@ namespace RSA
         // private
         // ------------------------------------------------------------------------------------------------------------
 
-        private uint CalculateByteBlockLength(uint maxBlockLength)
+        private int CalculateByteBlockLength(int maxBlockLength)
         {
-            uint result = 0;
+            int result = 0;
             var counter = Key.ModNumber;
             while (counter > 0)
             {
@@ -62,6 +91,42 @@ namespace RSA
             if (result > maxBlockLength)
                 return maxBlockLength;
             return result;
+        }
+
+        private static ulong ByteArrayToBlock(byte[] bytes)
+        {
+            ulong result = 0;
+            for (int i = bytes.Length - 1; i >= 0; --i)
+            {
+                result <<= Constants.ByteLength;
+                result += bytes[i];
+            }
+            return result;
+        }
+
+        private static byte[] BlockToByteArray(BigInteger block, int length)
+        {
+            var result = new byte[length];
+            for (byte i = 0; i < length; ++i)
+            {
+                result[i] = (byte)(block & Constants.ByteMask);
+                block >>= Constants.ByteLength;
+            }
+            return result;
+        }
+    }
+
+    public class Key
+    {
+        public BigInteger ModNumber { get; set; }
+        public BigInteger? OpenKey { get; set; }
+        public BigInteger? SecretKey { get; set; }
+
+        public Key(BigInteger modNumber, BigInteger? openKey, BigInteger? secretKey)
+        {
+            ModNumber = modNumber;
+            OpenKey = openKey;
+            SecretKey = secretKey;
         }
     }
 }

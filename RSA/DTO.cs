@@ -5,8 +5,8 @@ namespace RSA
 {
     public class Settings
     {
-        public Key Key { get; set; }
-        public uint MaxByteBlocks { get; set; }
+        public SKey SKey { get; set; }
+        public int MaxByteBlocks { get; set; }
         public AtomicOperation[] Operations { get; set; }
     }
     public class AtomicOperation
@@ -22,18 +22,14 @@ namespace RSA
         public const string Decrypt = "Decrypt";
     }
 
-    public class Key
+    /// <summary>
+    /// Key with string representation for BigInteger deserialization
+    /// </summary>
+    public class SKey
     {
-        public BigInteger ModNumber { get; set; }
-        public BigInteger? OpenKey { get; set; }
-        public BigInteger? SecretKey { get; set; }
-
-        public Key(BigInteger modNumber, BigInteger? openKey, BigInteger? secretKey)
-        {
-            ModNumber = modNumber;
-            OpenKey = openKey;
-            SecretKey = secretKey;
-        }
+        public string ModNumber { get; set; }
+        public string? OpenKey { get; set; }
+        public string? SecretKey { get; set; }
     }
 }
 #pragma warning restore CS8618
