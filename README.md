@@ -40,11 +40,17 @@
 
 ## Settings 
 
-### MinPrimeValue - lower bound for primes
+### MinPrimeValue 
 
-### MaxPrimeValue - lower bound for primes
+* Lower bound for primes
 
-### OutputPath - path for generationg .txt file with RSA keys
+### MaxPrimeValue 
+
+* Upper bound for primes
+
+### OutputPath 
+
+* Path for generationg .txt file with RSA keys
 
 
 
