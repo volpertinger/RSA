@@ -5,7 +5,7 @@ namespace RSATests
     [TestClass]
     public class RSATests
     {
-        private RSA.RSA rsa = new(new RSA.Key(8612189837, 6968567183, 2644925087), 4);
+        private RSA.RSA rsa = new(new RSA.Key(8612189837, 6968567183, 2644925087));
 
         [TestMethod]
         public void TestBlocks()
